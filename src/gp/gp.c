@@ -591,7 +591,7 @@ main(int argc, char **argv)
   cb_pari_ask_confirm = gp_ask_confirm;
   pari_init_paths();
   pari_mt_init(); /* MPI: will not return on slaves (pari_MPI_rank = 0) */
-#ifdef _WIN32
+#if defined(_WIN32) && defined(MINGW)
   if (stdin_isatty) win32_set_codepage();
 #endif
 #ifdef READLINE

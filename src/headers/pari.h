@@ -36,6 +36,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA. */
 #include <memory.h>
 #include <ctype.h>
 
+#ifndef INFINITY
+#define INFINITY strtod("Inf", NULL)
+#endif
+
 #include "parisys.h"
 #include "parigen.h"
 #include "paricast.h"

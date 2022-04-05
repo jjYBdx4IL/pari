@@ -2860,7 +2860,11 @@ walltimer_start(pari_timer *ti)
   {  ti->s = tv.tv_sec; ti->us = tv.tv_usec; return; }
 #elif defined(USE_FTIMEFORWALLTIME)
   struct timeb tp;
+#ifdef WIN32
+  ftime(&tp);
+#else
   if (!ftime(&tp))
+#endif
   { ti->s = tp.time; ti->us = tp.millitm*1000; return; }
 #endif
   timer_start(ti);

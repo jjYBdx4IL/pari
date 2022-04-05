@@ -1081,7 +1081,7 @@ lfuninit_worker(long r, GEN K, GEN L, GEN peh2d, GEN vroots, GEN dr, GEN di,
   double sig0 = rtodbl(gel(dr,1)), sub2 = rtodbl(gel(dr,2));
   double k1 = rtodbl(gel(dr,3)), MAXs = rtodbl(gel(dr,4));
   long D = di[1], M = di[2], m0 = di[3];
-  double M0 = sig0? sub2 / sig0: 1./0.;
+  double M0 = sig0? sub2 / sig0: INFINITY;
   GEN AB, A, B, vK = cgetg(M/m0 + 2, t_VEC);
 
   for (q = 0, m = r; m <= M; m += m0, q++)

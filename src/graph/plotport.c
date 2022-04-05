@@ -1225,7 +1225,7 @@ static dblPointList *
 plotrecthin(void *E, GEN(*eval)(void*, GEN), GEN a, GEN b, ulong flags,
             long N, long prec)
 {
-  const double INF = 1.0/0.0;
+  const double INF = INFINITY;
   const long param = flags & (PLOT_PARAMETRIC|PLOT_COMPLEX);
   const long recur = flags & PLOT_RECURSIVE;
   const long cplx = flags & PLOT_COMPLEX;
