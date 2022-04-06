@@ -1,0 +1,1 @@
+* use build directory in source root in order to have the MSVC debugger being able to locate the source files on its own

@@ -440,7 +440,7 @@ external_help(const char *s, int num)
     opt = "-k";
   else if (t[strlen(t)-1] != '@')
     ar = stack_sprintf("@%d",num);
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_MSC_VER)
   if (*help == '@')
   {
     const char *basedir = win32_basedir();
@@ -798,16 +798,14 @@ gprc_get(void)
     if (free_it) pari_free((void*)home);
     s = str + l;
     if (c != '/' && c != '\\') *s++ = '/';
-#ifndef _WIN32
-    strcpy(s, ".gprc");
-#else
+#if defined(_WIN32) && !defined(_MSC_VER)
     strcpy(s, "gprc.txt");
+#else
+    strcpy(s, ".gprc");
 #endif
     f = gprc_chk(str); /* in $HOME */
     if (!f) f = gprc_chk(s); /* in . */
-#ifndef _WIN32
-    if (!f) f = gprc_chk("/etc/gprc");
-#else
+#if defined(_WIN32) && !defined(_MSC_VER)
     if (!f)  /* in basedir */
     {
       const char *basedir = win32_basedir();
@@ -815,6 +813,8 @@ gprc_get(void)
       sprintf(t, "%s/%s", basedir, s);
       f = gprc_chk(t); free(t);
     }
+#else
+    if (!f) f = gprc_chk("/etc/gprc"); // FIXME
 #endif
     pari_free(str);
   }
@@ -1333,7 +1333,7 @@ pari_alarm(long s)
 {
   if (s < 0) pari_err_DOMAIN("alarm","delay","<",gen_0,stoi(s));
   if (s) timer_start(&ti_alarm);
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_MSC_VER)
   win32_alarm(s);
 #elif defined(HAS_ALARM)
   alarm(s);

@@ -517,7 +517,7 @@ input_loop(filtre_t *F, input_method *IM)
 PariOUT *pariOut, *pariErr;
 static void
 _fputs(const char *s, FILE *f ) {
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_MSC_VER)
    win32_ansi_fputs(s, f);
 #else
   fputs(s, f);
@@ -1581,7 +1581,7 @@ strlen_real(const char *s)
 static int
 term_width_intern(void)
 {
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_MSC_VER)
   return win32_terminal_width();
 #endif
 #ifdef HAS_TIOCGWINSZ
@@ -1607,7 +1607,7 @@ term_width_intern(void)
 static int
 term_height_intern(void)
 {
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_MSC_VER)
   return win32_terminal_height();
 #endif
 #ifdef HAS_TIOCGWINSZ
@@ -3295,7 +3295,7 @@ static THREAD long gp_file_serial;
 #  endif
 #  define HAVE_PIPES
 #endif
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(_MSC_VER)
 #  define HAVE_PIPES
 #endif
 #ifndef O_RDONLY
@@ -4981,9 +4981,11 @@ gp_fileclose(long n)
 {
   check_gp_file("fileclose", n);
   if (DEBUGFILES) err_printf("fileclose(%ld)\n",n);
+#ifdef HAVE_PIPES
   if (gp_file[n].type == mf_PIPE)
     pclose(gp_file[n].fp);
   else
+#endif
     fclose(gp_file[n].fp);
   pari_free((void*)gp_file[n].name);
   gp_file[n].name = NULL;

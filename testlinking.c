@@ -6,6 +6,7 @@
 #include <math.h>
 #include <pari.h>
 
+
 #define PRECISION 5
 
 static GEN half = NULL;

@@ -801,7 +801,7 @@ pari_init_defaults(void)
   pari_datadir = os_getenv("GP_DATA_DIR");
   if (!pari_datadir)
   {
-#if defined(_WIN32) || defined(__CYGWIN32__)
+#if (defined(_WIN32) || defined(__CYGWIN32__)) && !defined(_MSC_VER)
     if (paricfg_datadir[0]=='@' && paricfg_datadir[1]==0)
       pari_datadir = win32_datadir();
     else
@@ -2775,7 +2775,7 @@ timer_start(pari_timer *T)
   struct tms t; times(&t);
   _get_time(T, t.tms_utime, tck);
 }
-# elif defined(_WIN32)
+# elif defined(_WIN32) && !_MSC_VER
 static void
 pari_init_timer(void) { }
 

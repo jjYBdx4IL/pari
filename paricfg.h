@@ -2,8 +2,14 @@
  *  next time Configure is run. */
 #ifndef __PARICFG_H__
 #define __PARICFG_H__
-//#define UNIX
+
+#ifdef _MSC_VER
+#pragma warning(disable: 4293 4477 4312 4047 4098)
 #define _USE_MATH_DEFINES
+#elif !defined(WIN32)
+#define UNIX
+#endif
+
 #define GPHELP "\"/usr/local/bin/gphelp\""
 #define GPDATADIR "/usr/local/share/pari"
 #define SHELL_Q '\''
@@ -16,20 +22,14 @@
 #define PARI_VCSVERSION ""
 #define PARI_MT_ENGINE "single"
 
-#define PARI_DOUBLE_FORMAT -
-
 #define LONG_IS_64BIT
-#ifdef WIN32 // windows uses 32bit longs and 64bit pointers
-#undef LONG_IS_64BIT
-#endif
 
-// MSVC has no support for variable length stack allocations
-#ifdef _MSC_VER
-#define VAA(type,var,N) type* var = malloc(sizeof(type) * N)
-#define VAA_FREE(var) free(var)
+#ifndef LONG_IS_64BIT
+#define PARI_DOUBLE_FORMAT 1
+#define INDEX0 1
+#define INDEX1 0
 #else
-#define VAA(type,var,N) type var[N]
-#define VAA_FREE(var)
+#define PARI_DOUBLE_FORMAT 2
 #endif
 
 /*  Location of GNU gzip program (enables reading of .Z and .gz files). */

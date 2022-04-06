@@ -944,7 +944,7 @@ init_help(void)
 {
   char *h = os_getenv("GPHELP");
   if (!h) h = (char*)paricfg_gphelp;
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_MSC_VER)
   win32_set_pdf_viewer();
 #endif
   if (h) h = pari_strdup(h);

@@ -22,6 +22,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA. */
 #  include <sys/types.h> /* size_t */
 #endif
 
+// MSVC has no support for variable length stack allocations
+#ifdef _MSC_VER
+#define VAA(type,var,N) type* var = malloc(sizeof(type) * N)
+#define VAA_FREE(var) free(var)
+#else
+#define VAA(type,var,N) type var[N]
+#define VAA_FREE(var)
+#endif
+
 #include <signal.h>
 #include <stdio.h>
 #include <stdarg.h>
