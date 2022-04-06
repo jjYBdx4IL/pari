@@ -212,7 +212,7 @@ sieve_init2(long p, ratpoints_sieve_entry *se1, long b1, ratpoints_args *args1)
   long wp = p >> TWOPOTBITS_IN_LONG;
   long diff_shift = p & LONG_MASK;
   long diff = BITS_IN_LONG - diff_shift;
-  ulong* help = malloc(sizeof(ulong)* ((p>>TWOPOTBITS_IN_LONG) + 2));
+  VAA(ulong, help, ((p >> TWOPOTBITS_IN_LONG) + 2));
 
   /* initialize help */
   {
@@ -261,7 +261,7 @@ sieve_init2(long p, ratpoints_sieve_entry *se1, long b1, ratpoints_args *args1)
      CODE_INIT_SIEVE_COPY
     /* set sieve array */
     se->sieve[b] = (ratpoints_bit_array *)si;
-    free(help);
+    VAA_FREE(help);
     return (ratpoints_bit_array *)si;
   }
 }
@@ -931,7 +931,7 @@ sieving_info(ratpoints_args *args,
   /* initialize sieve in se_buffer */
   for (pn = 1; pn <= args->num_primes; pn++)
   {
-    long* coeffs_mod_p = malloc(sizeof(long)*(degree+1)); /* The coefficients of f reduced modulo p */
+    VAA(long, coeffs_mod_p, (degree + 1)); /* The coefficients of f reduced modulo p */
     ulong a, p = args->listprime[pn], np;
     long n;
     int *is_f_square = args->int_next;
@@ -967,7 +967,7 @@ sieving_info(ratpoints_args *args,
 
     /* check if there are no solutions mod p */
     if (np == 0 && !is_f_square[p]) {
-        free(coeffs_mod_p);
+        VAA_FREE(coeffs_mod_p);
         return gc_long(av, p);
     }
 
@@ -1090,7 +1090,7 @@ sift(long b, ratpoints_bit_array *survivors, ratpoints_args *args,
      int process(long, long, GEN, void*, int*), void *info)
 {
   pari_sp av = avma;
-  sieve_spec* ssp = malloc(sizeof(sieve_spec)*args->sp2);
+  VAA(sieve_spec, ssp, args->sp2);
   int do_setup = 1;
   long k, height = args->height, nb;
 
@@ -1210,7 +1210,7 @@ sift(long b, ratpoints_bit_array *survivors, ratpoints_args *args,
         nb += _ratpoints_sift0(b, w_low0, w_high0, args, which_bits,
                          survivors, &ssp[0], quit, process, info);
         if (*quit) {
-            free(ssp);
+            VAA_FREE(ssp);
             return;
         }
       }
@@ -1388,7 +1388,7 @@ find_points_work(ratpoints_args *args,
       /* need only take squares as denoms */
       {
         long b, bb;
-        long* bp_list = malloc(sizeof(long) * args->sp2);
+        VAA(long, bp_list, args->sp2);
         long last_b = args->b_low;
         long n;
         for (n = 0; n < args->sp2; n++)
@@ -1413,7 +1413,7 @@ find_points_work(ratpoints_args *args,
               if (quit) break;
             }
           }
-        free(bp_list);
+        VAA_FREE(bp_list);
       }
       else /* args->flags & RATPOINTS_USE_SQUARES1 */
       {
@@ -1422,7 +1422,7 @@ find_points_work(ratpoints_args *args,
         long ld = lg(divisors);
         long k;
         long b, bb;
-        long* bp_list = malloc(sizeof(long)* args->sp2);
+        VAA(long, bp_list, args->sp2);
 
         for (k = 1; k < ld; k++)
         {
@@ -1467,7 +1467,7 @@ find_points_work(ratpoints_args *args,
           }
           if (quit) break;
         }
-        free(bp_list);
+        VAA_FREE(bp_list);
       }
     }
     else
@@ -1476,7 +1476,7 @@ find_points_work(ratpoints_args *args,
       {
         long *forb;
         long b;
-        long* bp_list = malloc(sizeof(long) * args->sp2);
+        VAA(long, bp_list, args->sp2);
         long last_b = args->b_low;
         ulong b_bits;
         long n;
@@ -1542,12 +1542,12 @@ find_points_work(ratpoints_args *args,
             }
           }
         }
-        free(bp_list);
+        VAA_FREE(bp_list);
       } /* if (args->flags & RATPOINTS_CHECK_DENOM) */
       else
       {
         long b, n;
-        long* bp_list = malloc(sizeof(long) * args->sp2);
+        VAA(long, bp_list, args->sp2);
         long last_b = args->b_low;
         for (n = 0; n < args->sp2; n++)
           bp_list[n] = mod(args->b_low, sieve_list[n]->p);
@@ -1575,7 +1575,7 @@ find_points_work(ratpoints_args *args,
             if (quit) break;
           }
         }
-        free(bp_list);
+        VAA_FREE(bp_list);
       }
     }
   }

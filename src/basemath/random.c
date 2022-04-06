@@ -30,7 +30,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA. */
 #ifdef LONG_IS_64BIT
   typedef ulong u64;
 #else
+#ifdef _MSC_VER
   typedef unsigned __int64 u64;
+#else
+  typedef unsigned long long u64;
+#endif
 static u64
 _32to64(ulong a, ulong b) { u64 v = a; return (v<<32)|b; }
 static void

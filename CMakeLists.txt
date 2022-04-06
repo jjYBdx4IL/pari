@@ -4,7 +4,7 @@ project(pari VERSION 2.13.3 LANGUAGES C)
 
 if(MSVC)
     add_compile_options(/MP)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:CONSOLE")
+    #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:CONSOLE")
 endif()
 
 include_directories(src/headers .)
@@ -23,7 +23,7 @@ message(STATUS "SRC_GP=${SRC_GP}")
 
 
 
-add_library(pari ${SRC_BASEMATH} ${SRC_LANGUAGE} ${SRC_MODULES} ${SRG_GP} ${SRC_GRAPH} src/mt/single.c)
+add_library(libpari STATIC ${SRC_BASEMATH} ${SRC_LANGUAGE} ${SRC_MODULES} ${SRG_GP} ${SRC_GRAPH} src/mt/single.c)
 
 #add_executable(gp src/gp/gp.c)
 #target_link_libraries(gp PRIVATE pari)
@@ -34,3 +34,17 @@ add_library(pari ${SRC_BASEMATH} ${SRC_LANGUAGE} ${SRC_MODULES} ${SRG_GP} ${SRC_
 # src\kernel\ix86, src\language, src\modules and Odos, EXCEPT pariCE.[ch];
 # all of the files in src\gp except gp_rl.c; the files plotnull.c, plotport.c
 # and rect.h in src\graph.c; and the file src\kernel\none\mp.c.
+
+
+
+include(CTest)
+set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
+enable_testing()
+
+add_executable (testlinking testlinking.c)
+target_link_libraries(testlinking libpari)
+add_test(testlinking testlinking)
+
+if(MSVC)
+    target_compile_definitions(testlinking PRIVATE _USE_MATH_DEFINES)
+endif()

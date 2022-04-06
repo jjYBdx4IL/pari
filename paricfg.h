@@ -23,6 +23,15 @@
 #undef LONG_IS_64BIT
 #endif
 
+// MSVC has no support for variable length stack allocations
+#ifdef _MSC_VER
+#define VAA(type,var,N) type* var = malloc(sizeof(type) * N)
+#define VAA_FREE(var) free(var)
+#else
+#define VAA(type,var,N) type var[N]
+#define VAA_FREE(var)
+#endif
+
 /*  Location of GNU gzip program (enables reading of .Z and .gz files). */
 #define GNUZCAT
 #define ZCAT "/usr/bin/gzip -dc"
